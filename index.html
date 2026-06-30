@@ -30,7 +30,7 @@
         }
         #slideshow {
             max-width: 96vw;
-            max-height: 76vh;
+            max-height: 70vh;
             border-radius: 18px;
             box-shadow: 0 12px 48px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.04);
             display: block;
@@ -39,7 +39,14 @@
             transition: opacity 0.15s ease;
         }
         .controls {
-            margin-top: 16px;
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .controls-top {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -52,13 +59,29 @@
             border: 1px solid rgba(255,255,255,0.08);
             box-shadow: 0 4px 20px rgba(0,0,0,0.6);
             flex-wrap: wrap;
+            width: 100%;
+        }
+        .controls-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255,255,255,0.7);
+            background: rgba(20,20,20,0.4);
+            backdrop-filter: blur(6px);
+            padding: 8px 18px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.05);
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 600px;
         }
         button {
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.15);
             color: white;
-            font-size: 20px;
-            padding: 6px 18px;
+            font-size: 18px;
+            padding: 6px 16px;
             border-radius: 40px;
             cursor: pointer;
             transition: all 0.2s;
@@ -150,20 +173,62 @@
             text-align: center;
             opacity: 0.9;
         }
+        .page-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .page-nav input {
+            width: 60px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.4);
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            outline: none;
+            transition: 0.2s;
+        }
+        .page-nav input:focus {
+            border-color: rgba(255,255,255,0.4);
+            background: rgba(0,0,0,0.6);
+        }
+        .page-nav input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        .page-nav input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        .page-nav button {
+            font-size: 14px;
+            padding: 4px 12px;
+        }
+        .filename-display {
+            font-size: 13px;
+            opacity: 0.6;
+            color: rgba(255,255,255,0.7);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.3px;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
         .hint {
             color: rgba(255,255,255,0.15);
             font-size: 11px;
-            margin-top: 6px;
+            margin-top: 4px;
             letter-spacing: 0.5px;
         }
         @media (max-width: 700px) {
-            .controls {
+            .controls-top {
                 gap: 10px;
                 padding: 8px 14px;
                 border-radius: 30px;
             }
             button {
-                font-size: 16px;
+                font-size: 15px;
                 padding: 4px 12px;
             }
             #counter {
@@ -181,17 +246,30 @@
                 min-width: 28px;
             }
             #slideshow {
-                max-height: 70vh;
+                max-height: 60vh;
+            }
+            .controls-bottom {
+                padding: 6px 12px;
+                gap: 8px;
+            }
+            .filename-display {
+                font-size: 11px;
+                max-width: 150px;
+            }
+            .page-nav input {
+                width: 50px;
+                font-size: 12px;
+                padding: 3px 6px;
             }
         }
         @media (max-width: 500px) {
-            .controls {
+            .controls-top {
                 gap: 6px;
                 padding: 6px 10px;
             }
             button {
-                font-size: 14px;
-                padding: 3px 10px;
+                font-size: 13px;
+                padding: 3px 8px;
             }
             .speed-control input[type="range"] {
                 width: 40px;
@@ -203,7 +281,16 @@
                 font-size: 10px;
             }
             #slideshow {
-                max-height: 60vh;
+                max-height: 50vh;
+            }
+            .filename-display {
+                font-size: 10px;
+                max-width: 100px;
+            }
+            .page-nav input {
+                width: 40px;
+                font-size: 11px;
+                padding: 2px 4px;
             }
         }
     </style>
@@ -214,22 +301,35 @@
     <img id="slideshow" src="" alt="Presentation">
 
     <div class="controls">
-        <button id="prevBtn">◀ Back</button>
-        
-        <div class="slide-controls">
-            <span id="counter">1 / 867</span>
-            <button id="playBtn">▶ Play</button>
+        <div class="controls-top">
+            <button id="prevBtn">◀ Back</button>
+            
+            <div class="slide-controls">
+                <span id="counter">1 / 867</span>
+                <button id="playBtn">▶ Play</button>
+            </div>
+            
+            <button id="nextBtn">Next ▶</button>
+            
+            <div class="speed-control">
+                <label for="speedSlider">⏱</label>
+                <input type="range" id="speedSlider" min="1" max="20" value="5" step="0.5">
+                <span class="speed-value" id="speedDisplay">5s</span>
+            </div>
         </div>
-        
-        <button id="nextBtn">Next ▶</button>
-        
-        <div class="speed-control">
-            <label for="speedSlider">⏱</label>
-            <input type="range" id="speedSlider" min="1" max="20" value="5" step="0.5">
-            <span class="speed-value" id="speedDisplay">5s</span>
+
+        <div class="controls-bottom">
+            <div class="page-nav">
+                <button id="goStartBtn">⏮</button>
+                <input type="number" id="pageInput" min="1" max="867" value="1">
+                <span style="font-size:14px;opacity:0.6;">/ 867</span>
+                <button id="goBtn">Go</button>
+                <button id="goEndBtn">⏭</button>
+            </div>
+            <div class="filename-display" id="filenameDisplay">IMG_20260615_163546.webp</div>
         </div>
     </div>
-    <div class="hint">←  →  keys · Space: play/pause</div>
+    <div class="hint">←  →  keys · Space: play/pause · Page: enter number + Go</div>
 </div>
 
 <script>
@@ -1108,22 +1208,26 @@
         ];
 
         // ==============================================================
-        //  NEW BASE URL (updated repository)
+        //  BASE URL
         // ==============================================================
         const baseUrl = 'https://item1000-collab.github.io/dprk-photos/web/';
 
-        // Build full URLs
         const photoUrls = photoNames.map(name => baseUrl + name);
         const totalPhotos = photoUrls.length;
 
         // DOM elements
         const imgElement = document.getElementById('slideshow');
         const counterElement = document.getElementById('counter');
+        const filenameDisplay = document.getElementById('filenameDisplay');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const playBtn = document.getElementById('playBtn');
         const speedSlider = document.getElementById('speedSlider');
         const speedDisplay = document.getElementById('speedDisplay');
+        const pageInput = document.getElementById('pageInput');
+        const goBtn = document.getElementById('goBtn');
+        const goStartBtn = document.getElementById('goStartBtn');
+        const goEndBtn = document.getElementById('goEndBtn');
 
         let currentIndex = 0;
         let slideInterval = null;
@@ -1140,6 +1244,8 @@
             currentIndex = index;
             imgElement.src = photoUrls[currentIndex];
             counterElement.textContent = `${currentIndex + 1} / ${totalPhotos}`;
+            filenameDisplay.textContent = photoNames[currentIndex];
+            pageInput.value = currentIndex + 1;
 
             // Preload neighboring photos
             const nextIndex = currentIndex + 1;
@@ -1171,7 +1277,6 @@
                 if (currentIndex < totalPhotos - 1) {
                     updateSlide(currentIndex + 1);
                 } else {
-                    // Loop back to start
                     updateSlide(0);
                 }
             }, slideDuration * 1000);
@@ -1202,10 +1307,45 @@
             slideDuration = parseFloat(this.value);
             speedDisplay.textContent = slideDuration + 's';
             
-            // Restart slideshow with new speed if playing
             if (isPlaying) {
-                startSlideshow(); // restart with new duration
+                startSlideshow();
             }
+        });
+
+        // ==============================================================
+        //  PAGE NAVIGATION
+        // ==============================================================
+        function goToPage(pageNum) {
+            const index = pageNum - 1;
+            if (index >= 0 && index < totalPhotos) {
+                if (isPlaying) stopSlideshow();
+                updateSlide(index);
+            }
+        }
+
+        goBtn.addEventListener('click', function() {
+            const pageNum = parseInt(pageInput.value);
+            if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPhotos) {
+                goToPage(pageNum);
+            } else {
+                pageInput.value = currentIndex + 1;
+            }
+        });
+
+        pageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                goBtn.click();
+            }
+        });
+
+        goStartBtn.addEventListener('click', function() {
+            if (isPlaying) stopSlideshow();
+            updateSlide(0);
+        });
+
+        goEndBtn.addEventListener('click', function() {
+            if (isPlaying) stopSlideshow();
+            updateSlide(totalPhotos - 1);
         });
 
         // ==============================================================
@@ -1245,11 +1385,10 @@
         // ==============================================================
         updateSlide(0);
 
-        console.log(`✅ Loaded ${totalPhotos} photos from new repo`);
+        console.log(`✅ Loaded ${totalPhotos} photos`);
         console.log('📸 First photo:', photoUrls[0]);
         console.log('📸 Last photo:', photoUrls[photoUrls.length - 1]);
         console.log('⏱ Default slide duration: 5s');
-        console.log('▶ Press Play or Space to start slideshow');
     })();
 </script>
 
