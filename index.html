@@ -2,131 +2,133 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentation · 843 photos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fullscreen · 843 photos</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background: #0a0a0a;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
             user-select: none;
-            padding: 16px;
         }
-        .slider-container {
+
+        /* fullscreen container */
+        .fullscreen-slider {
             position: relative;
-            max-width: 96vw;
-            max-height: 92vh;
+            width: 100vw;
+            height: 100vh;
+            background: #0a0a0a;
             display: flex;
-            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
+
         #slideshow {
-            max-width: 96vw;
-            max-height: 70vh;
-            border-radius: 18px;
-            box-shadow: 0 12px 48px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.04);
-            display: block;
-            background: #1a1a1a;
+            width: 100vw;
+            height: 100vh;
             object-fit: contain;
+            background: #0a0a0a;
+            display: block;
             transition: opacity 0.15s ease;
         }
-        .controls {
-            margin-top: 14px;
+
+        /* ------ OVERLAY CONTROLS (glassmorphism) ------ */
+        .controls-overlay {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
-        .controls-top {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-            color: rgba(255,255,255,0.85);
-            background: rgba(20,20,20,0.6);
-            backdrop-filter: blur(10px);
-            padding: 10px 24px;
-            border-radius: 60px;
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            flex-wrap: wrap;
-            width: 100%;
-        }
-        .controls-bottom {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             gap: 12px;
-            color: rgba(255,255,255,0.7);
-            background: rgba(20,20,20,0.4);
-            backdrop-filter: blur(6px);
-            padding: 8px 18px;
-            border-radius: 40px;
-            border: 1px solid rgba(255,255,255,0.05);
-            flex-wrap: wrap;
-            width: 100%;
-            max-width: 600px;
+            pointer-events: none;   /* clicks pass to buttons inside */
+            padding: 0 16px;
         }
-        button {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.15);
+
+        .controls-overlay > * {
+            pointer-events: auto;
+        }
+
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px 14px;
+            background: rgba(10, 10, 10, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 60px;
+            padding: 10px 22px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+            width: auto;
+            max-width: 98%;
+        }
+
+        .controls-row button {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
             color: white;
-            font-size: 18px;
+            font-size: 17px;
             padding: 6px 16px;
             border-radius: 40px;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 500;
             backdrop-filter: blur(4px);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 4px;
             white-space: nowrap;
         }
-        button:hover {
+        .controls-row button:hover {
             background: rgba(255,255,255,0.18);
             border-color: rgba(255,255,255,0.3);
             transform: scale(1.02);
         }
-        button:active {
+        .controls-row button:active {
             transform: scale(0.96);
         }
-        button.active {
+        .controls-row button.active {
             background: rgba(255, 50, 50, 0.25);
             border-color: rgba(255, 50, 50, 0.5);
             box-shadow: 0 0 20px rgba(255, 50, 50, 0.15);
         }
+
         #counter {
             font-size: 16px;
             font-weight: 400;
             min-width: 80px;
             text-align: center;
-            opacity: 0.8;
-            background: rgba(0,0,0,0.2);
+            color: rgba(255,255,255,0.85);
+            background: rgba(0,0,0,0.25);
             padding: 4px 14px;
             border-radius: 40px;
             backdrop-filter: blur(2px);
         }
+
         .slide-controls {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
+
         .speed-control {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: rgba(0,0,0,0.2);
-            padding: 4px 12px 4px 16px;
+            padding: 4px 12px 4px 14px;
             border-radius: 40px;
             backdrop-filter: blur(2px);
         }
@@ -150,7 +152,7 @@
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.85);
             cursor: pointer;
             transition: 0.2s;
         }
@@ -162,7 +164,7 @@
             height: 14px;
             border-radius: 50%;
             border: none;
-            background: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.85);
             cursor: pointer;
         }
         .speed-value {
@@ -173,17 +175,18 @@
             text-align: center;
             opacity: 0.9;
         }
+
         .page-nav {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .page-nav input {
-            width: 60px;
-            padding: 4px 8px;
-            border-radius: 20px;
+            width: 56px;
+            padding: 4px 6px;
+            border-radius: 24px;
             border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.5);
             color: white;
             font-size: 14px;
             text-align: center;
@@ -192,7 +195,7 @@
         }
         .page-nav input:focus {
             border-color: rgba(255,255,255,0.4);
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
         }
         .page-nav input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -204,31 +207,48 @@
             font-size: 14px;
             padding: 4px 12px;
         }
+        .page-nav span {
+            font-size: 14px;
+            opacity: 0.6;
+            color: white;
+        }
+
         .filename-display {
             font-size: 13px;
             opacity: 0.6;
             color: rgba(255,255,255,0.7);
             font-family: 'Courier New', monospace;
             letter-spacing: 0.3px;
-            max-width: 300px;
+            max-width: 260px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            background: rgba(0,0,0,0.2);
+            padding: 3px 14px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
         }
+
         .hint {
-            color: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.2);
             font-size: 11px;
-            margin-top: 4px;
             letter-spacing: 0.5px;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+            margin-top: 2px;
         }
-        @media (max-width: 700px) {
-            .controls-top {
-                gap: 10px;
+
+        /* responsive */
+        @media (max-width: 800px) {
+            .controls-row {
                 padding: 8px 14px;
-                border-radius: 30px;
+                gap: 8px 10px;
+                border-radius: 40px;
             }
-            button {
-                font-size: 15px;
+            .controls-row button {
+                font-size: 14px;
                 padding: 4px 12px;
             }
             #counter {
@@ -245,30 +265,29 @@
                 font-size: 12px;
                 min-width: 28px;
             }
-            #slideshow {
-                max-height: 60vh;
-            }
-            .controls-bottom {
-                padding: 6px 12px;
-                gap: 8px;
-            }
             .filename-display {
                 font-size: 11px;
-                max-width: 150px;
+                max-width: 140px;
             }
             .page-nav input {
-                width: 50px;
+                width: 44px;
                 font-size: 12px;
-                padding: 3px 6px;
+                padding: 3px 4px;
+            }
+            .page-nav button {
+                font-size: 12px;
+                padding: 3px 8px;
             }
         }
-        @media (max-width: 500px) {
-            .controls-top {
-                gap: 6px;
+
+        @media (max-width: 550px) {
+            .controls-row {
                 padding: 6px 10px;
+                gap: 6px 8px;
+                border-radius: 30px;
             }
-            button {
-                font-size: 13px;
+            .controls-row button {
+                font-size: 12px;
                 padding: 3px 8px;
             }
             .speed-control input[type="range"] {
@@ -277,31 +296,34 @@
             .speed-control {
                 padding: 2px 8px 2px 10px;
             }
-            .speed-control label {
-                font-size: 10px;
-            }
-            #slideshow {
-                max-height: 50vh;
+            #counter {
+                font-size: 12px;
+                min-width: 44px;
             }
             .filename-display {
                 font-size: 10px;
-                max-width: 100px;
+                max-width: 90px;
             }
             .page-nav input {
-                width: 40px;
+                width: 36px;
                 font-size: 11px;
-                padding: 2px 4px;
+                padding: 2px 3px;
+            }
+            .hint {
+                font-size: 9px;
+                padding: 2px 10px;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="slider-container">
+<div class="fullscreen-slider">
     <img id="slideshow" src="" alt="Presentation">
 
-    <div class="controls">
-        <div class="controls-top">
+    <!-- OVERLAY CONTROLS -->
+    <div class="controls-overlay">
+        <div class="controls-row">
             <button id="prevBtn">◀ Back</button>
             
             <div class="slide-controls">
@@ -318,18 +340,19 @@
             </div>
         </div>
 
-        <div class="controls-bottom">
+        <div class="controls-row" style="padding: 6px 16px; gap: 8px 12px; flex-wrap: wrap;">
             <div class="page-nav">
                 <button id="goStartBtn">⏮</button>
                 <input type="number" id="pageInput" min="1" max="843" value="1">
-                <span style="font-size:14px;opacity:0.6;">/ 843</span>
+                <span>/ 843</span>
                 <button id="goBtn">Go</button>
                 <button id="goEndBtn">⏭</button>
             </div>
             <div class="filename-display" id="filenameDisplay">IMG_20260615_163546.webp</div>
         </div>
+
+        <div class="hint">←  →  keys · Space: play/pause · Page: enter number + Go</div>
     </div>
-    <div class="hint">←  →  keys · Space: play/pause · Page: enter number + Go</div>
 </div>
 
 <script>
@@ -1207,15 +1230,10 @@
             "IMG_20260624_110450.webp"
         ];
 
-        // ==============================================================
-        //  BASE URL
-        // ==============================================================
         const baseUrl = 'https://item1000-collab.github.io/dprk-photos/web/';
-
         const photoUrls = photoNames.map(name => baseUrl + name);
         const totalPhotos = photoUrls.length;
 
-        // DOM elements
         const imgElement = document.getElementById('slideshow');
         const counterElement = document.getElementById('counter');
         const filenameDisplay = document.getElementById('filenameDisplay');
@@ -1232,53 +1250,38 @@
         let currentIndex = 0;
         let slideInterval = null;
         let isPlaying = false;
-        let slideDuration = 5; // seconds
+        let slideDuration = 5;
 
-        // ==============================================================
-        //  UPDATE SLIDE FUNCTION
-        // ==============================================================
         function updateSlide(index) {
             if (index < 0) index = 0;
             if (index >= totalPhotos) index = totalPhotos - 1;
-
             currentIndex = index;
             imgElement.src = photoUrls[currentIndex];
             counterElement.textContent = `${currentIndex + 1} / ${totalPhotos}`;
             filenameDisplay.textContent = photoNames[currentIndex];
             pageInput.value = currentIndex + 1;
 
-            // Preload neighboring photos
-            const nextIndex = currentIndex + 1;
-            if (nextIndex < totalPhotos) {
+            // preload neighbours
+            const nextIdx = currentIndex + 1;
+            if (nextIdx < totalPhotos) {
                 const preloadNext = new Image();
-                preloadNext.src = photoUrls[nextIndex];
+                preloadNext.src = photoUrls[nextIdx];
             }
-
-            const prevIndex = currentIndex - 1;
-            if (prevIndex >= 0) {
+            const prevIdx = currentIndex - 1;
+            if (prevIdx >= 0) {
                 const preloadPrev = new Image();
-                preloadPrev.src = photoUrls[prevIndex];
+                preloadPrev.src = photoUrls[prevIdx];
             }
         }
 
-        // ==============================================================
-        //  SLIDESHOW CONTROLS
-        // ==============================================================
         function startSlideshow() {
-            if (slideInterval) {
-                clearInterval(slideInterval);
-                slideInterval = null;
-            }
+            if (slideInterval) clearInterval(slideInterval);
             isPlaying = true;
             playBtn.textContent = '⏸ Pause';
             playBtn.classList.add('active');
-            
             slideInterval = setInterval(() => {
-                if (currentIndex < totalPhotos - 1) {
-                    updateSlide(currentIndex + 1);
-                } else {
-                    updateSlide(0);
-                }
+                if (currentIndex < totalPhotos - 1) updateSlide(currentIndex + 1);
+                else updateSlide(0);
             }, slideDuration * 1000);
         }
 
@@ -1293,28 +1296,18 @@
         }
 
         function toggleSlideshow() {
-            if (isPlaying) {
-                stopSlideshow();
-            } else {
-                startSlideshow();
-            }
+            if (isPlaying) stopSlideshow();
+            else startSlideshow();
         }
 
-        // ==============================================================
-        //  SPEED CONTROL
-        // ==============================================================
         speedSlider.addEventListener('input', function() {
             slideDuration = parseFloat(this.value);
             speedDisplay.textContent = slideDuration + 's';
-            
             if (isPlaying) {
                 startSlideshow();
             }
         });
 
-        // ==============================================================
-        //  PAGE NAVIGATION
-        // ==============================================================
         function goToPage(pageNum) {
             const index = pageNum - 1;
             if (index >= 0 && index < totalPhotos) {
@@ -1331,41 +1324,22 @@
                 pageInput.value = currentIndex + 1;
             }
         });
+        pageInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') goBtn.click(); });
+        goStartBtn.addEventListener('click', () => { if (isPlaying) stopSlideshow(); updateSlide(0); });
+        goEndBtn.addEventListener('click', () => { if (isPlaying) stopSlideshow(); updateSlide(totalPhotos - 1); });
 
-        pageInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                goBtn.click();
-            }
-        });
-
-        goStartBtn.addEventListener('click', function() {
-            if (isPlaying) stopSlideshow();
-            updateSlide(0);
-        });
-
-        goEndBtn.addEventListener('click', function() {
-            if (isPlaying) stopSlideshow();
-            updateSlide(totalPhotos - 1);
-        });
-
-        // ==============================================================
-        //  BUTTON & KEYBOARD HANDLERS
-        // ==============================================================
         prevBtn.addEventListener('click', () => {
             if (isPlaying) stopSlideshow();
             if (currentIndex > 0) updateSlide(currentIndex - 1);
         });
-
         nextBtn.addEventListener('click', () => {
             if (isPlaying) stopSlideshow();
             if (currentIndex < totalPhotos - 1) updateSlide(currentIndex + 1);
         });
-
         playBtn.addEventListener('click', toggleSlideshow);
 
         window.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            
             if (e.key === ' ' || e.key === 'Space') {
                 e.preventDefault();
                 toggleSlideshow();
@@ -1380,17 +1354,9 @@
             }
         });
 
-        // ==============================================================
-        //  START
-        // ==============================================================
         updateSlide(0);
-
-        console.log(`✅ Loaded ${totalPhotos} photos`);
-        console.log('📸 First photo:', photoUrls[0]);
-        console.log('📸 Last photo:', photoUrls[photoUrls.length - 1]);
-        console.log('⏱ Default slide duration: 5s');
+        console.log(`✅ Loaded ${totalPhotos} photos · Fullscreen mode`);
     })();
 </script>
-
 </body>
 </html>
